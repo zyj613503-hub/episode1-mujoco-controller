@@ -1,0 +1,510 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="gripper">
+  <!-- 工具坐标系（新的根）：手指伸出方向 = +Z，符合末端执行器惯例。
+       原来的 gripper_base_link 是 SolidWorks 导出的装配体坐标系，手指朝 +Y。
+       这里不去改动那一大堆关节原点/轴/mimic 系数（改一处错一处），而是加一节
+       fixed joint 把整个模型绕 X 转 +90°：base 的 +Y → mount 的 +Z。
+       X（两指开合方向）保持不变。 -->
+  <link
+    name="gripper_mount" />
+  <joint
+    name="gripper_mount_joint"
+    type="fixed">
+    <origin
+      xyz="0 0 0"
+      rpy="1.5707963 0 0" />
+    <parent
+      link="gripper_mount" />
+    <child
+      link="gripper_base_link" />
+  </joint>
+  <link
+    name="gripper_base_link">
+    <inertial>
+      <origin
+        xyz="0.00091117 0.0065095 -0.01463"
+        rpy="0 0 0" />
+      <mass
+        value="0.065014" />
+      <inertia
+        ixx="3.3783E-05"
+        ixy="-2.5689E-07"
+        ixz="9.1004E-07"
+        iyy="4.4723E-05"
+        iyz="2.8879E-06"
+        izz="2.0637E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://gripper/meshes/gripper_base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://gripper/meshes/gripper_base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="link_gear1">
+    <inertial>
+      <origin
+        xyz="-0.00807490304907014 0.0107570544809771 0.00470516629266777"
+        rpy="0 0 0" />
+      <mass
+        value="0.00474977495749991" />
+      <inertia
+        ixx="7.83389362892289E-07"
+        ixy="5.82559425757126E-07"
+        ixz="1.77089643142207E-10"
+        iyy="6.4630220451341E-07"
+        iyz="-1.67800639848209E-10"
+        izz="1.40127565418021E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://gripper/meshes/link_gear1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://gripper/meshes/link_gear1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <!-- 驱动关节：关节值直接就是舵机指令角（0~110°，弧度制 0~1.91987）。
+       标定点：90° = 连杆平行状态；110° = 夹爪基本合拢（实物手指柔性，
+       会自己夹紧，所以刚体模型在 ~98° 之后会出现指面互相穿透，属预期，不必处理）。
+       0° 时张开约 92mm。
+
+       原始导出里关节值是机构几何角 q，这里通过 origin 预转 +50° + axis 取反
+       换算成指令角坐标：q = 50° - 关节值。origin 的 rpy 与 axis 同为 Z 轴、
+       可交换，Rz(50°)·Rz(-s) = Rz(q)，所以子连杆位置与原来完全一致，
+       只是关节读数的零点和方向变了。 -->
+  <joint
+    name="joint_gear1"
+    type="revolute">
+    <origin
+      xyz="-0.013 0.03 -0.0217"
+      rpy="0 0 0.8726646" />
+    <parent
+      link="gripper_base_link" />
+    <child
+      link="link_gear1" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="0"
+      upper="1.91987"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="link_finger1">
+    <inertial>
+      <origin
+        xyz="-0.00872921596551027 0.0101576300716104 0.0228999998374587"
+        rpy="0 0 0" />
+      <mass
+        value="0.0199992813021374" />
+      <inertia
+        ixx="4.35103993894113E-06"
+        ixy="-8.22954317741796E-07"
+        ixz="-2.86563653886116E-08"
+        iyy="2.17742276586541E-06"
+        iyz="-1.11363506800047E-07"
+        izz="5.34363768417929E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://gripper/meshes/link_finger1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://gripper/meshes/link_finger1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <!-- 平行四边形的连杆：手指相对 gear1 反向转，绝对姿态保持不变（平行夹持）。
+       需要 值 = -q = 关节值 - 50°，故 multiplier=1、offset=-50°。 -->
+  <joint
+    name="joint_finger1"
+    type="revolute">
+    <origin
+      xyz="-0.025471 0.030842 -0.0012"
+      rpy="0 0 0" />
+    <parent
+      link="link_gear1" />
+    <child
+      link="link_finger1" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.8727"
+      upper="1.0473"
+      effort="0"
+      velocity="0" />
+    <mimic
+      joint="joint_gear1"
+      multiplier="1"
+      offset="-0.8726646" />
+  </joint>
+  <link
+    name="link_gear2">
+    <inertial>
+      <origin
+        xyz="0.00791910195277552 0.0105109506891273 0.00688621452455042"
+        rpy="0 0 0" />
+      <mass
+        value="0.00495079844234329" />
+      <inertia
+        ixx="8.14689116843516E-07"
+        ixy="-6.04974824255628E-07"
+        ixz="-6.49087562121823E-11"
+        iyy="6.65386370424356E-07"
+        iyz="-7.40886042344477E-11"
+        izz="1.45041619782907E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://gripper/meshes/link_gear2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://gripper/meshes/link_gear2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <!-- 右半边：值仍保持为机构几何角 q = 50° - 关节值，
+       这样下游 mimic 它的 joint_finger2 / joint_f2 不必再改。 -->
+  <joint
+    name="joint_gear2"
+    type="revolute">
+    <origin
+      xyz="0.013 0.03 -0.023884"
+      rpy="0 0 0" />
+    <parent
+      link="gripper_base_link" />
+    <child
+      link="link_gear2" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="-1.0473"
+      upper="0.8727"
+      effort="0"
+      velocity="0" />
+    <mimic
+      joint="joint_gear1"
+      multiplier="-1"
+      offset="0.8726646" />
+  </joint>
+  <link
+    name="link_finger2">
+    <inertial>
+      <origin
+        xyz="0.00872921596554121 0.0101576300715338 0.0229000002473265"
+        rpy="0 0 0" />
+      <mass
+        value="0.0199992813023463" />
+      <inertia
+        ixx="4.35103993920624E-06"
+        ixy="8.22954317746467E-07"
+        ixz="2.8656427840804E-08"
+        iyy="2.17742276587183E-06"
+        iyz="-1.11363875743444E-07"
+        izz="5.34363768444267E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://gripper/meshes/link_finger2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://gripper/meshes/link_finger2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint_finger2"
+    type="revolute">
+    <origin
+      xyz="0.025471 0.030842 0.0009835"
+      rpy="0 0 0" />
+    <parent
+      link="link_gear2" />
+    <child
+      link="link_finger2" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-1.0473"
+      upper="0.8727"
+      effort="0"
+      velocity="0" />
+    <mimic
+      joint="joint_gear2"
+      multiplier="1"
+      offset="0" />
+  </joint>
+  <link
+    name="link_f1">
+    <inertial>
+      <origin
+        xyz="-0.0127353376659726 0.0154211275376913 0.0209000000000003"
+        rpy="0 0 0" />
+      <mass
+        value="0.00463168134870463" />
+      <inertia
+        ixx="5.80399788139715E-07"
+        ixy="4.29488771263048E-07"
+        ixz="1.9041409762883E-23"
+        iyy="4.15022683419088E-07"
+        iyz="-3.28917405126999E-23"
+        izz="9.83071321295591E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://gripper/meshes/link_f1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://gripper/meshes/link_f1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint_f1"
+    type="revolute">
+    <origin
+      xyz="-0.035 0.018 -0.0209"
+      rpy="0 0 0" />
+    <parent
+      link="gripper_base_link" />
+    <child
+      link="link_f1" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-1.0473"
+      upper="0.8727"
+      effort="0"
+      velocity="0" />
+    <mimic
+      joint="joint_gear1"
+      multiplier="-1"
+      offset="0.8726646" />
+  </joint>
+  <link
+    name="link_f2">
+    <inertial>
+      <origin
+        xyz="0.0127353376659726 0.0154211275376913 0.0209000000000003"
+        rpy="0 0 0" />
+      <mass
+        value="0.00463168134870463" />
+      <inertia
+        ixx="5.80399788139715E-07"
+        ixy="-4.29488771263048E-07"
+        ixz="-9.30263663912908E-24"
+        iyy="4.15022683419088E-07"
+        iyz="-1.69333568017557E-23"
+        izz="9.83071321295591E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://gripper/meshes/link_f2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://gripper/meshes/link_f2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <!-- axis 原为 0 0 1，与左侧的 joint_f1 同向 —— 导出时漏了取反
+       （对称的 joint_gear2 已经是 -1），两根连杆会同向摆而不是镜像。 -->
+  <joint
+    name="joint_f2"
+    type="revolute">
+    <origin
+      xyz="0.035 0.018 -0.0209"
+      rpy="0 0 0" />
+    <parent
+      link="gripper_base_link" />
+    <child
+      link="link_f2" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="-1.0473"
+      upper="0.8727"
+      effort="0"
+      velocity="0" />
+    <mimic
+      joint="joint_gear2"
+      multiplier="1"
+      offset="0" />
+  </joint>
+  <link
+    name="camera_link">
+    <inertial>
+      <origin
+        xyz="0.0300236673094443 0.00728809003382839 -0.00731656735613178"
+        rpy="0 0 0" />
+      <mass
+        value="0.0126199620269933" />
+      <inertia
+        ixx="5.45978892061688E-07"
+        ixy="-6.5347588558397E-10"
+        ixz="-1.50531956346884E-07"
+        iyy="4.76647775321015E-06"
+        iyz="-5.21883301176547E-10"
+        izz="4.29355468662532E-06" />
+    </inertial>
+    <!-- 相机网格换成 D435_Solid.STL（原来那个是 Gemini 的模型）。两点注意：
+         1) 该网格是按**毫米**建的，URDF 用米，所以必须带 scale="0.001 ..."，
+            否则会大出 1000 倍；
+         2) 它的局部原点在包围盒一角、而不是像原网格那样在体内，所以用 origin
+            把它平移回原相机的位置——offset 取的是"两个网格包围盒中心对齐"，
+            装好后相机体心仍在基座系 (2.4, 2.1, -63.7) mm，与换之前一致。
+            若实际安装基准不是体心，改这里的 origin xyz 即可。 -->
+    <visual>
+      <origin
+        xyz="-0.014704 -0.003673 0.005833"
+        rpy="-1.5707963 0 0" />
+      <geometry>
+        <mesh
+          filename="package://gripper/meshes/D435_Solid.STL"
+          scale="0.001 0.001 0.001" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.501960784313725 1 0.501960784313725 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="-0.014704 -0.003673 0.005833"
+        rpy="-1.5707963 0 0" />
+      <geometry>
+        <mesh
+          filename="package://gripper/meshes/D435_Solid.STL"
+          scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="camera_joint"
+    type="fixed">
+    <origin
+      xyz="-0.027893 -0.006754 -0.056342"
+      rpy="0 0 0" />
+    <parent
+      link="gripper_base_link" />
+    <child
+      link="camera_link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+</robot>

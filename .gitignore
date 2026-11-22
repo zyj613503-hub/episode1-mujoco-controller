@@ -1,0 +1,23 @@
+# Local Python environment
+.venv/
+venv/
+
+# Python caches and test output
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Runtime output
+bridge/logs/
+运行器/out/
+*.log
+
+# Editors and operating systems
+.DS_Store
+.idea/
+.vscode/
+
+# Local trajectory exports
+*.csv

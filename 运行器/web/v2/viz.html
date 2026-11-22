@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="viz-html">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>MuJoCo 上位机 · 3D 可视化与编程</title>
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="../css/v2-viz.css">
+<script src="vendor/three.min.js"></script>
+<script src="vendor/STLLoader.js"></script>
+<script src="vendor/OrbitControls.js"></script>
+<script src="js/preview.js"></script>
+</head>
+<body class="viz-body">
+<div class="viz-shell">
+
+  <header class="topbar viz-topbar">
+    <div class="brand">
+      <svg class="brand-mark" width="20" height="18" viewBox="0 0 20 18" aria-hidden="true">
+        <circle cx="3" cy="15" r="3" fill="currentColor"></circle>
+        <circle cx="10" cy="9" r="3" fill="currentColor"></circle>
+        <circle cx="17" cy="3" r="3" fill="currentColor"></circle>
+      </svg>
+      <span class="brand-name">MuJoCo 上位机</span>
+      <span class="brand-version">V2.4.0</span>
+    </div>
+    <span class="topbar-spacer"></span>
+    <div class="engine-meta">
+      <span class="engine-state" id="engineState"><i class="edot"></i>仿真引擎就绪</span>
+    </div>
+    <button class="estop-btn" type="button" id="estopBtn">急停</button>
+  </header>
+
+  <nav class="viz-tabs" aria-label="主页面">
+    <a class="vtab" href="base.html">基础控制</a>
+    <a class="vtab is-active" href="viz.html" aria-current="page">3D 可视化与编程</a>
+    <span class="tab-meta">EPISODE1 · 6-DOF · 500 KBPS</span>
+  </nav>
+
+  <main class="viz-main">
+    <div class="viz-grid">
+
+      <!-- ============ 左栏 ============ -->
+      <section class="col col-left" aria-label="轨迹编程">
+
+        <section class="vcard card-wp" aria-labelledby="wpTitle">
+          <div class="vcard-head">
+            <h2 class="vcard-title" id="wpTitle">轨迹点</h2>
+            <span class="vcard-meta" id="wpCount">3 个 · 米</span>
+          </div>
+          <div class="wp-head" aria-hidden="true">
+            <span class="wp-idx"></span>
+            <span class="wp-col">X</span>
+            <span class="wp-col">Y</span>
+            <span class="wp-col">Z</span>
+            <span class="wp-col wp-col--grip">夹爪 °</span>
+          </div>
+          <div class="wp-list" id="wpList"></div>
+          <div class="wp-add-wrap">
+            <button class="wp-add" type="button" id="wpAdd">+ 添加轨迹点</button>
+            <p class="wp-hint">按顺序走点；夹爪开合角到点停稳后执行</p>
+          </div>
+        </section>
+
+        <section class="vcard card-teach" aria-labelledby="teachTitle">
+          <div class="vcard-head">
+            <h2 class="vcard-title" id="teachTitle">示教轨迹</h2>
+            <button class="head-plus" type="button" id="teachAdd" aria-label="添加示教轨迹">+</button>
+          </div>
+          <p class="teach-hint">暂无示教轨迹。点右上角「+」，拖着真机走一段</p>
+        </section>
+
+        <section class="vcard card-scene" aria-labelledby="sceneTitle">
+          <div class="vcard-head">
+            <h2 class="vcard-title" id="sceneTitle">SCENE</h2>
+            <button class="head-action" type="button" id="sceneApply">布置场景</button>
+          </div>
+          <div class="scene-body">
+            <label class="scene-row">
+              <span class="scene-label">模型 XML</span>
+              <span class="scene-box"><input id="modelXml" type="text" value="model/episode1.xml" spellcheck="false" aria-label="模型 XML"></span>
+            </label>
+            <label class="scene-row">
+              <span class="scene-label">场景 XML</span>
+              <span class="scene-box"><input id="sceneXml" type="text" value="model/scene_episode1.xml" spellcheck="false" aria-label="场景 XML"></span>
+            </label>
+          </div>
+        </section>
+
+        <section class="vcard card-lib" aria-labelledby="libTitle">
+          <div class="vcard-head">
+            <h2 class="vcard-title" id="libTitle">脚本库</h2>
+            <span class="vcard-meta" id="libCount">2 个文件</span>
+          </div>
+          <div class="lib-list" id="libList"></div>
+          <div class="lib-foot">
+            <span>scripts/</span>
+            <button class="lib-open-dir" type="button" id="openDir">打开目录</button>
+          </div>
+        </section>
+
+      </section>
+
+      <!-- ============ 中栏 ============ -->
+      <section class="col col-mid" aria-label="实时视口与播放">
+        <section class="vcard mid-vp" aria-labelledby="vpTitle">
+          <div class="vcard-head">
+            <h2 class="vcard-title" id="vpTitle">本地预览</h2>
+            <span class="vcard-meta">THREE.JS · 本地 FK</span>
+          </div>
+
+          <div class="vp-tools">
+            <button class="vp-view-btn" type="button" id="viewBtn">复位视角</button>
+            <label class="chk"><input type="checkbox" id="chkGrid" checked><span class="chk-box" aria-hidden="true"></span><span class="chk-label">网格</span></label>
+            <label class="chk"><input type="checkbox" id="chkAxes" checked><span class="chk-box" aria-hidden="true"></span><span class="chk-label">坐标轴</span></label>
+            <span class="vp-fps" id="vpFps">本地渲染</span>
+          </div>
+
+          <div class="vp-stage" id="vpStage">
+            <div class="vp-preview" id="preview" role="img" aria-label="机械臂本地三维预览"></div>
+
+            <i class="vp-corner tl" aria-hidden="true"></i>
+            <i class="vp-corner tr" aria-hidden="true"></i>
+            <i class="vp-corner bl" aria-hidden="true"></i>
+            <i class="vp-corner br" aria-hidden="true"></i>
+
+            <div class="vp-view">VIEW 01 · 本地透视</div>
+            <div class="vp-hint">左键旋转 · 中键平移 · 滚轮缩放 · 双击复位</div>
+            <div class="vp-reset-hint">双击重置视角</div>
+          </div>
+
+          <div class="vp-readout">
+            <span class="ro-main" id="roTcp">TCP — — — MM</span>
+            <i class="ro-sep" aria-hidden="true"></i>
+            <span class="ro-item" id="roFlange">法兰 — — — MM</span>
+            <i class="ro-sep" aria-hidden="true"></i>
+            <span class="ro-item" id="roIk">IK — MM</span>
+            <span class="ro-spacer"></span>
+            <span class="ro-live"><i class="ldot" id="roDot"></i><span id="roLiveText">本地 FK · 不上传画面</span></span>
+          </div>
+        </section>
+
+        <section class="vcard mid-play" aria-label="播放控制">
+          <button class="play-btn" type="button" id="playBtn" aria-label="播放">
+            <svg class="ic-play" width="12" height="16" viewBox="0 0 12 16" aria-hidden="true"><path d="M1 1 L11 8 L1 15 Z" fill="#17150F"></path></svg>
+            <svg class="ic-pause" width="12" height="16" viewBox="0 0 12 16" aria-hidden="true" hidden><rect x="1" y="1" width="3" height="14" fill="#17150F"></rect><rect x="8" y="1" width="3" height="14" fill="#17150F"></rect></svg>
+          </button>
+
+          <div class="slider slider--seek" id="seekSlider">
+            <div class="slider-track"></div>
+            <div class="slider-fill"></div>
+            <div class="slider-thumb"></div>
+            <input type="range" id="seek" min="0" max="1000" step="1" value="258" aria-label="播放进度">
+          </div>
+          <span class="play-time" id="playTime">0.0 S / —</span>
+
+          <span class="play-spacer"></span>
+          <label class="chk chk--loop"><input type="checkbox" id="chkLoop"><span class="chk-box" aria-hidden="true"></span><span class="chk-label">循环</span></label>
+          <button class="speed-btn" type="button" id="speedBtn">1.0×</button>
+          <button class="traj-btn" type="button" id="trajApply">应用</button>
+          <button class="traj-btn traj-btn--ink" type="button" id="trajRun">运行</button>
+        </section>
+      </section>
+
+      <!-- ============ 右栏（栏内滚动） ============ -->
+      <div class="col col-right">
+        <div class="right-scroll" id="rightScroll">
+
+          <section class="vcard card-kin" aria-labelledby="kinTitle">
+            <div class="vcard-head">
+              <h2 class="vcard-title" id="kinTitle">运动学状态</h2>
+              <span class="vcard-meta" id="kinIk">IK 0.4 MM</span>
+            </div>
+            <div class="kin-status">
+              <i class="kdot is-ok" id="kinDot"></i>
+              <span class="kin-status-text" id="kinStatus">可达</span>
+            </div>
+            <div class="kin-cols" aria-hidden="true">
+              <span></span><span>X</span><span>Y</span><span>Z</span>
+            </div>
+            <div class="kin-fields" id="kinFields">
+              <div class="kin-row" data-frame="flange">
+                <span class="kf-label">法兰 MM</span>
+                <input class="pose-in is-hot" data-frame="flange" data-axis="mm" data-num data-step="1" value="256.0" inputmode="decimal" aria-label="法兰 X 毫米">
+                <input class="pose-in" data-frame="flange" data-axis="mm" data-num data-step="1" value="280.4" inputmode="decimal" aria-label="法兰 Y 毫米">
+                <input class="pose-in" data-frame="flange" data-axis="mm" data-num data-step="1" value="166.3" inputmode="decimal" aria-label="法兰 Z 毫米">
+              </div>
+              <div class="kin-row" data-frame="flange">
+                <span class="kf-label">°</span>
+                <input class="pose-in" data-frame="flange" data-axis="deg" data-num data-step="1" value="177.8" inputmode="decimal" aria-label="法兰 RX 度">
+                <input class="pose-in" data-frame="flange" data-axis="deg" data-num data-step="1" value="0.1" inputmode="decimal" aria-label="法兰 RY 度">
+                <input class="pose-in" data-frame="flange" data-axis="deg" data-num data-step="1" value="139.3" inputmode="decimal" aria-label="法兰 RZ 度">
+              </div>
+              <div class="kin-row" data-frame="tcp">
+                <span class="kf-label">TCP 尖 MM</span>
+                <input class="pose-in" data-frame="tcp" data-axis="mm" data-num data-step="1" value="259.1" inputmode="decimal" aria-label="TCP X 毫米">
+                <input class="pose-in" data-frame="tcp" data-axis="mm" data-num data-step="1" value="283.8" inputmode="decimal" aria-label="TCP Y 毫米">
+                <input class="pose-in" data-frame="tcp" data-axis="mm" data-num data-step="1" value="46.4" inputmode="decimal" aria-label="TCP Z 毫米">
+              </div>
+              <div class="kin-row" data-frame="tcp">
+                <span class="kf-label">°</span>
+                <input class="pose-in" data-frame="tcp" data-axis="deg" data-num data-step="1" value="177.8" inputmode="decimal" aria-label="TCP RX 度">
+                <input class="pose-in" data-frame="tcp" data-axis="deg" data-num data-step="1" value="0.1" inputmode="decimal" aria-label="TCP RY 度">
+                <input class="pose-in" data-frame="tcp" data-axis="deg" data-num data-step="1" value="139.3" inputmode="decimal" aria-label="TCP RZ 度">
+              </div>
+            </div>
+            <p class="kin-hint">键入位姿后回车 → 解 IK；解不出转红</p>
+          </section>
+
+          <section class="vcard card-joint" aria-labelledby="jointTitle">
+            <div class="vcard-head">
+              <h2 class="vcard-title" id="jointTitle">关节角度</h2>
+              <span class="joint-actions">
+                <button type="button" id="jointCopy">复制</button><i>/</i><button type="button" id="jointPaste">粘贴</button><i>/</i><button type="button" id="jointHome">回默认</button>
+              </span>
+            </div>
+            <div class="joint-body" id="jointBody"></div>
+            <div class="joint-foot">
+              <button class="btn-ghost" type="button" id="jointRead">读取真机</button>
+              <button class="btn-ghost is-primary" type="button" id="jointApply">应用关节角度</button>
+            </div>
+          </section>
+
+          <section class="vcard card-grip" aria-labelledby="gripTitle">
+            <div class="vcard-head">
+              <h2 class="vcard-title" id="gripTitle">夹爪</h2>
+            </div>
+            <div class="grip-row">
+              <span class="kf-label">开合角</span>
+              <div class="slider slider--grip" id="gripSlider">
+                <div class="slider-track"></div>
+                <div class="slider-fill"></div>
+                <div class="slider-thumb"></div>
+                <input type="range" id="grip" min="0" max="110" step="1" value="0" aria-label="夹爪开合角">
+              </div>
+              <input class="num-box grip-value" id="gripValue" data-num data-step="1" value="0.0" inputmode="decimal" aria-label="夹爪开合角度">
+            </div>
+            <div class="grip-foot">
+              <span>安装角 0°</span><span>TCP 偏移 120 MM</span>
+            </div>
+            <p class="grip-hint">安装角是机器标定，只能停 90° 倍数<br>TCP 偏移跟场景走，换指头才改</p>
+          </section>
+
+        </div>
+        <div class="right-scrollbar" id="rightBar" aria-hidden="true"><div class="right-thumb" id="rightThumb"></div></div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="cmdbar">
+    <span class="cmd-label">生成脚本</span>
+    <label class="cmd-file" for="fileName">
+      <span class="cmd-prefix">scripts/</span>
+      <input id="fileName" type="text" value="pick_and_place.py" spellcheck="false" aria-label="脚本文件名">
+    </label>
+    <span class="cmd-spacer"></span>
+    <span class="cmd-meta" id="cmdMeta">3 路点 · — · 全部可达</span>
+    <button class="btn cmd-cancel" type="button" id="cmdCancel">取消</button>
+    <button class="btn btn--ink cmd-confirm" type="button" id="cmdConfirm">确认生成</button>
+  </footer>
+
+</div>
+<div class="vi-toasts" id="toastHost" role="status" aria-live="polite"></div>
+<script src="viz.js"></script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<!--
+  episode1 机械臂 + 木桌 + 黄球 + 盘子 的"舞台"场景。
+  ============================================================
+  文件分工：
+    model/episode1.xml   恩培 Episode1 机械臂本身（6 个关节，会被仿真）
+    model/scene_episode1.xml  这个文件：桌子、球、盘子、灯光、天空（布景）
+
+  坐标约定（很重要）：
+    * 这是**桌面坐标系**：桌面正好在 z = 0，机械臂底座安装面也在 z = 0。
+      所以桌子上物体的 z 直接就是"离桌面多高"。
+    * +x 朝前（远离底座），+y 朝左，+z 朝上。
+-->
+<mujoco model="episode1 table scene">
+  <include file="episode1.xml"/>
+
+  <statistic center="0 0 0.35" extent="1.3"/>
+
+  <visual>
+    <headlight diffuse="0.55 0.55 0.55" ambient="0.28 0.28 0.28" specular="0.1 0.1 0.1"/>
+    <rgba haze="0.15 0.25 0.35 1"/>
+    <global azimuth="135" elevation="-18" offwidth="1280" offheight="720"/>
+    <quality shadowsize="4096"/>
+    <map znear="0.01" zfar="60"/>
+  </visual>
+
+  <asset>
+    <texture type="skybox" builtin="gradient" rgb1="0.36 0.56 0.76" rgb2="0.02 0.03 0.05"
+      width="512" height="3072"/>
+    <texture type="2d" name="wood" file="assets/wood_top.png"/>
+    <material name="wood" texture="wood" texrepeat="3 3" texuniform="true"
+      specular="0.15" shininess="0.15"/>
+    <material name="ball_yellow" rgba="1 0.82 0.08 1" specular="0.7" shininess="0.8"/>
+    <material name="plate_white" rgba="0.95 0.95 0.93 1" specular="0.45" shininess="0.5"/>
+    <material name="floor" rgba="0.16 0.17 0.18 1" specular="0.05" shininess="0.1"/>
+    <mesh file="plate.obj"/>
+  </asset>
+
+  <worldbody>
+    <light name="key" pos="0 -1.4 2.4" dir="0 0 -1" directional="true" diffuse="0.55 0.55 0.53"/>
+    <light name="fill" pos="1.6 1.4 2.2" dir="-1 -1 -1" directional="true" diffuse="0.3 0.3 0.32"
+      castshadow="false"/>
+
+    <!-- 注意：episode1.xml 里有 <default><geom conaffinity="0">（臂自己和自己不碰撞），
+         布景的几何体要显式写 contype/conaffinity="1"，否则球会直接穿过桌面。 -->
+    <geom name="floor" type="plane" size="0 0 0.05" pos="0 0 -0.75" material="floor"
+          contype="1" conaffinity="1"/>
+
+    <!-- 2 m × 2 m 木桌：台面上表面正好 z = 0 -->
+    <body name="table" pos="0 0 0">
+      <geom name="table_top" type="box" size="1.0 1.0 0.02" pos="0 0 -0.02"
+            material="wood" friction="1.0 0.02 0.001" contype="1" conaffinity="1"/>
+      <geom name="table_leg_a" type="box" size="0.045 0.045 0.355" pos=" 0.93  0.93 -0.395"
+            material="wood" friction="0.9 0.02 0.001" contype="1" conaffinity="1"/>
+      <geom name="table_leg_b" type="box" size="0.045 0.045 0.355" pos=" 0.93 -0.93 -0.395"
+            material="wood" friction="0.9 0.02 0.001" contype="1" conaffinity="1"/>
+      <geom name="table_leg_c" type="box" size="0.045 0.045 0.355" pos="-0.93  0.93 -0.395"
+            material="wood" friction="0.9 0.02 0.001" contype="1" conaffinity="1"/>
+      <geom name="table_leg_d" type="box" size="0.045 0.045 0.355" pos="-0.93 -0.93 -0.395"
+            material="wood" friction="0.9 0.02 0.001" contype="1" conaffinity="1"/>
+    </body>
+
+    <!-- 黄球：半径 0.022 m（直径 4.4 cm），球心 z = 半径 -->
+    <body name="ball" pos="0.30 0.08 0.022">
+      <freejoint/>
+      <geom name="ball_geom" type="sphere" size="0.022" mass="0.02" material="ball_yellow"
+            friction="1.6 0.08 0.002" contype="1" conaffinity="1"/>
+    </body>
+
+    <!-- 盘子：网格底部在 -0.007，所以 z 取 0.007 -->
+    <body name="plate" pos="0.34 0.28 0.007">
+      <freejoint/>
+      <geom name="plate_geom" type="mesh" mesh="plate" material="plate_white"
+            friction="0.9 0.02 0.001" contype="1" conaffinity="1"/>
+    </body>
+  </worldbody>
+</mujoco>

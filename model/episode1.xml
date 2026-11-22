@@ -1,0 +1,141 @@
+<mujoco model="episode1_urdf_1113">
+  <compiler angle="radian" autolimits="true" meshdir="assets"/>
+  <option timestep="0.002" integrator="implicitfast"/>
+
+  <default>
+    <joint armature="0.01" damping="0.6" frictionloss="0.05"/>
+    <geom contype="1" conaffinity="0" margin="0.001"/>
+    <position kp="80" kv="2.5"/>
+  </default>
+
+  <asset>
+    <mesh name="base_link" content_type="model/stl" file="episode1/base_link.STL"/>
+    <mesh name="link1" content_type="model/stl" file="episode1/link1.STL"/>
+    <mesh name="link2" content_type="model/stl" file="episode1/link2.STL"/>
+    <mesh name="link3" content_type="model/stl" file="episode1/link3.STL"/>
+    <mesh name="link4" content_type="model/stl" file="episode1/link4.STL"/>
+    <mesh name="link5" content_type="model/stl" file="episode1/link5.STL"/>
+    <mesh name="link6" content_type="model/stl" file="episode1/link6.STL"/>
+    <!-- 夹爪网格：来自上位机自带 gripper.urdf（官方 CAD，单位米） -->
+    <mesh name="gripper_base" content_type="model/stl" file="gripper/gripper_base_link.STL"/>
+    <mesh name="gripper_gear1" content_type="model/stl" file="gripper/link_gear1.STL"/>
+    <mesh name="gripper_gear2" content_type="model/stl" file="gripper/link_gear2.STL"/>
+    <mesh name="gripper_finger1" content_type="model/stl" file="gripper/link_finger1.STL"/>
+    <mesh name="gripper_finger2" content_type="model/stl" file="gripper/link_finger2.STL"/>
+    <mesh name="gripper_link_f1" content_type="model/stl" file="gripper/link_f1.STL"/>
+    <mesh name="gripper_link_f2" content_type="model/stl" file="gripper/link_f2.STL"/>
+    <mesh name="gripper_d435" content_type="model/stl" file="gripper/D435_Solid.STL" scale="0.001 0.001 0.001"/>
+  </asset>
+
+  <worldbody>
+    <frame name="base_mount" pos="0 0 0.0802">
+    <geom contype="1" conaffinity="0" pos="0 0 0" quat="1 0 0 0" type="mesh" rgba="1 1 1 1" mesh="base_link"/>
+    <body name="link1">
+      <inertial pos="0.0129494 0.00484192 0.142856" quat="-0.000449493 0.586028 -0.050872 0.808692" mass="0.623226" diaginertia="0.00142301 0.00116972 0.000716075"/>
+      <joint name="joint1" range="-3.14159 2.79253"/>
+      <geom contype="1" conaffinity="0" pos="0 0 0" quat="1 0 0 0" type="mesh" rgba="1 1 1 1" mesh="link1"/>
+      <body name="link2" pos="0.055 -0.02 0.166" quat="0.707105 0.707108 0 0">
+        <inertial pos="-1.3287e-06 0.100002 0.0159597" quat="0.500016 0.500018 -0.499984 0.499981" mass="0.569589" diaginertia="0.00333865 0.00316756 0.000267821"/>
+        <joint name="joint2" range="-1.5708 1.5708" axis="0 0 -1"/>
+        <geom contype="1" conaffinity="0" pos="0 0 0" quat="1 0 0 0" type="mesh" rgba="1 1 1 1" mesh="link2"/>
+        <body name="link3" pos="0 0.2 0" quat="-3.67321e-06 0 0 1">
+          <inertial pos="-0.00503028 -0.0404887 -0.0199388" quat="-0.220276 0.671555 0.2203 0.67228" mass="0.549826" diaginertia="0.00102867 0.000696366 0.000580134"/>
+          <joint name="joint3" range="-1.44862 1.39626" axis="0 0 -1"/>
+          <geom contype="1" conaffinity="0" pos="0 0 0" quat="1 0 0 0" type="mesh" rgba="1 1 1 1" mesh="link3"/>
+          <body name="link4" pos="0 -0.056 -0.02" quat="0.499998 -0.5 0.500002 -0.5">
+            <inertial pos="2.88118e-07 -5.27642e-05 -0.132593" quat="1 1.58801e-05 1.29375e-06 5.91797e-07" mass="0.396344" diaginertia="0.000695803 0.000582583 0.000289627"/>
+            <joint name="joint4" range="-0.523599 5.32325" axis="0 0 -1"/>
+            <geom contype="1" conaffinity="0" type="mesh" rgba="1 1 1 1" mesh="link4"/>
+            <body name="link5" pos="0 0 -0.192" quat="0.499998 0.5 -0.5 0.500002">
+              <inertial pos="-0.00804753 3.79963e-08 1.24575e-07" quat="2.17741e-05 0.707129 -2.32915e-05 0.707084" mass="0.15175" diaginertia="7.16896e-05 6.74352e-05 6.52696e-05"/>
+              <joint name="joint5" range="-1.91986 1.91986" axis="0 0 -1"/>
+              <geom contype="1" conaffinity="0" quat="1 0 0 0" type="mesh" rgba="1 1 1 1" mesh="link5"/>
+              <body name="link6" pos="-0.055 0 0" quat="0.499998 0.5 -0.500002 -0.5">
+                <inertial pos="0 -3.28658e-06 -0.00865703" quat="0.00013281 0.707107 5.66824e-05 0.707107" mass="0.0182966" diaginertia="4.78464e-06 2.75621e-06 2.75582e-06"/>
+                <joint name="joint6" range="-0.523599 5.32325"/>
+                <geom contype="1" conaffinity="0" quat="1 0 0 0" type="mesh" rgba="0.792157 0.819608 0.933333 1" mesh="link6"/>
+      <site name="flange" pos="0 0 0.022" size="0.006" rgba="0.72 0.2 0.12 1" group="2"/>
+      <!-- tcp：不装夹爪时与法兰面同点；装二指夹爪后把 z 改成 0.022 + 夹爪长度（如 0.10） -->
+      <site name="tcp" pos="0 0 0.068" size="0.004" rgba="0.1 0.5 0.2 1" group="2"/>
+
+                <!-- =============================================================
+                     末端二指夹爪（真机模型）
+                     -------------------------------------------------------------
+                     来源：上位机 Episode1.app 自带资源
+                           Resources/web/assets/urdf/gripper.urdf
+                           Resources/web/assets/meshes/gripper/*.STL
+                     机构：伺服 -> joint_gear1（齿轮1）-> 齿轮2 -> 四连杆 -> 两根长爪
+                     真机是闭环机构，URDF 用 5 条 equality 约束表达，这里原样保留，
+                     所以开合动作与真机一致（不是简单平移）。
+                     控制：执行器 gripper_servo 作用在 joint_gear1 上，ctrl = 齿轮角度（rad）
+                           ctrl = 0.00   完全张开（两指尖相距约 92 mm）
+                           ctrl = 1.15   合到约 44 mm（夹 44 mm 的小球用这个）
+                           ctrl = 1.70   完全闭合
+                     ============================================================= -->
+                <body name="gripper_mount" pos="0 0 0.022" quat="0.707107 0.707107 0 0">
+                  <!-- 夹爪总重（URDF 只给裸件质量，偏轻，按含伺服/相机支架估） -->
+                  <inertial pos="0 0.02 0.02" mass="0.45" diaginertia="0.0008 0.0006 0.0006"/>
+                  <geom quat="1 0 0 0" type="mesh" rgba="0.55 0.57 0.6 1" mesh="gripper_base"/>
+                    <geom quat="1 0 0 0" type="mesh" rgba="0.62 0.64 0.67 1" mesh="gripper_base"/>
+                    <body name="link_gear1" pos="-0.013 0.03 -0.0217" quat="0.906308 0 0 0.422618">
+                    <inertial pos="-0.0080749 0.0107571 0.00470517" quat="0.289647 0.645171 -0.289568 0.644988" mass="0.00474977" diaginertia="1.40128e-06 1.30142e-06 1.28268e-07"/>
+                    <joint name="joint_gear1" range="0 1.91987" axis="0 0 -1"/>
+                    <geom quat="1 0 0 0" type="mesh" rgba="0.62 0.64 0.67 1" mesh="gripper_gear1"/>
+                    <body name="link_finger1" pos="-0.025471 0.030842 -0.0012">
+                    <inertial pos="-0.00872922 0.0101576 0.0229" quat="0.566788 0.422981 -0.581134 0.402643" mass="0.0199993" diaginertia="5.34755e-06 4.62737e-06 1.89718e-06"/>
+                    <joint name="joint_finger1" range="-0.8727 1.0473"/>
+                    <geom quat="1 0 0 0" type="mesh" rgba="0.58 0.6 0.64 1" mesh="gripper_finger1" friction="1.8 0.03 0.001"/>
+                    </body>
+                    </body>
+                    <body name="link_gear2" pos="0.013 0.03 -0.023884">
+                    <inertial pos="0.0079191 0.010511 0.00688621" quat="0.644646 0.290531 -0.644693 0.290507" mass="0.0049508" diaginertia="1.45042e-06 1.3496e-06 1.30474e-07"/>
+                    <joint name="joint_gear2" range="-1.0473 0.8727" axis="0 0 -1"/>
+                    <geom quat="1 0 0 0" type="mesh" rgba="0.62 0.64 0.67 1" mesh="gripper_gear2"/>
+                    <body name="link_finger2" pos="0.025471 0.030842 0.0009835">
+                    <inertial pos="0.00872922 0.0101576 0.0229" quat="0.402643 0.581134 -0.422981 0.566788" mass="0.0199993" diaginertia="5.34755e-06 4.62737e-06 1.89718e-06"/>
+                    <joint name="joint_finger2" range="-1.0473 0.8727"/>
+                    <geom quat="1 0 0 0" type="mesh" rgba="0.58 0.6 0.64 1" mesh="gripper_finger2" friction="1.8 0.03 0.001"/>
+                    </body>
+                    </body>
+                    <body name="link_f1" pos="-0.035 0.018 -0.0209">
+                    <inertial pos="-0.0127353 0.0154211 0.0209" quat="0.301344 0.639681 -0.301344 0.639681" mass="0.00463168" diaginertia="9.83071e-07 9.35088e-07 6.0335e-08"/>
+                    <joint name="joint_f1" range="-1.0473 0.8727"/>
+                    <geom type="mesh" rgba="0.62 0.64 0.67 1" mesh="gripper_link_f1"/>
+                    </body>
+                    <body name="link_f2" pos="0.035 0.018 -0.0209">
+                    <inertial pos="0.0127353 0.0154211 0.0209" quat="0.639681 0.301344 -0.639681 0.301344" mass="0.00463168" diaginertia="9.83071e-07 9.35088e-07 6.0335e-08"/>
+                    <joint name="joint_f2" range="-1.0473 0.8727" axis="0 0 -1"/>
+                    <geom type="mesh" rgba="0.62 0.64 0.67 1" mesh="gripper_link_f2"/>
+                    </body>
+                    <frame pos="-0.027893 -0.006754 -0.056342">
+                    <geom pos="-0.014704 -0.003673 0.005833" quat="0.707107 -0.707107 0 0" type="mesh" rgba="0.501961 1 0.501961 1" mesh="gripper_d435"/>
+                    </frame>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+    </frame>
+  </worldbody>
+  <actuator>
+    <position name="joint1_pos" joint="joint1" kp="200" kv="2.5" forcerange="-20 20"/>
+    <position name="joint2_pos" joint="joint2" kp="350" kv="2.5" forcerange="-20 20"/>
+    <position name="joint3_pos" joint="joint3" kp="250" kv="2.5" forcerange="-16 16"/>
+    <position name="joint4_pos" joint="joint4" kp="60" kv="2.5" forcerange="-6 6"/>
+    <position name="joint5_pos" joint="joint5" kp="40" kv="2.5" forcerange="-4 4"/>
+    <position name="joint6_pos" joint="joint6" kp="15" kv="2.5" forcerange="-2.5 2.5"/>
+    <!-- 夹爪：ctrl = 齿轮1 角度（rad），0 = 张开，1.15 = 夹 44mm 球，1.70 = 全闭 -->
+    <position name="gripper_servo" joint="joint_gear1" kp="60" kv="1" ctrlrange="0 1.70" forcerange="-30 30"/>
+  </actuator>
+
+  <equality>
+    <!-- 夹爪闭环：齿轮1 带动齿轮2，两根长爪由四连杆驱动（照抄 URDF 的绞连关系） -->
+    <joint joint1="joint_finger1" joint2="joint_gear1" polycoef="-0.872665 1 0 0 0"/>
+    <joint joint1="joint_gear2" joint2="joint_gear1" polycoef="0.872665 -1 0 0 0"/>
+    <joint joint1="joint_finger2" joint2="joint_gear2"/>
+    <joint joint1="joint_f1" joint2="joint_gear1" polycoef="0.872665 -1 0 0 0"/>
+    <joint joint1="joint_f2" joint2="joint_gear2"/>
+  </equality>
+</mujoco>

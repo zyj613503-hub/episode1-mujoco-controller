@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>基础控制 · MuJoCo 上位机 V2.4.0</title>
+<meta name="viewport" content="width=1440">
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="../css/v2-base.css">
+</head>
+<body class="v2-base">
+<div class="app">
+
+  <!-- ============ 顶栏 ============ -->
+  <header class="topbar">
+    <a class="brand" href="/v2/base">
+      <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="brand-name">MuJoCo 上位机</span>
+      <span class="brand-version mono">V2.4.0</span>
+    </a>
+    <span class="topbar-spacer"></span>
+    <span class="status-dot is-idle" id="statusDot"><span id="statusText">未连接</span></span>
+    <button class="estop" id="estopBtn" type="button">急停</button>
+  </header>
+
+  <!-- ============ 页签 ============ -->
+  <nav class="tabs" aria-label="主导航">
+    <a class="tab is-active" href="/v2/base" aria-current="page">基础控制</a>
+    <a class="tab" href="./viz.html">3D 可视化与编程</a>
+    <span class="tab-meta">EPISODE1 · 6-DOF · 500 KBPS</span>
+  </nav>
+
+  <!-- ============ 主区 ============ -->
+  <main class="stage">
+
+    <!-- ---------- 左列 ---------- -->
+    <div class="col col--left">
+
+      <!-- 连接卡 -->
+      <section class="panel card card--conn" aria-labelledby="connTitle">
+        <div class="panel-head">
+          <span class="card-title" id="connTitle">连接</span>
+          <span class="card-meta card-meta--with-action">
+            <button class="app-stop" id="btnAppStop" type="button"
+                    title="关闭独立的 MuJoCo 仿真应用进程">关闭仿真应用</button>
+            <span>CONNECTION</span>
+          </span>
+        </div>
+        <div class="conn-body">
+          <div class="lbl">控制模式</div>
+          <div class="seg" role="group" aria-label="控制模式">
+            <button type="button" class="seg-btn is-on" data-mode="sim" aria-pressed="true">仿真</button>
+            <button type="button" class="seg-btn" data-mode="real" aria-pressed="false">真机</button>
+          </div>
+
+          <div class="conn-row">
+            <div class="fld">
+              <label class="lbl" for="channel">CAN 通道</label>
+              <div class="ctl select">
+                <select id="channel" aria-label="CAN 通道">
+                  <option value="1" selected>USB1</option>
+                  <option value="2">USB2</option>
+                  <option value="3">USB3</option>
+                </select>
+                <span class="caret" aria-hidden="true">▾</span>
+              </div>
+            </div>
+            <div class="fld">
+              <label class="lbl" for="port">端口</label>
+              <div class="ctl">
+                <input id="port" type="text" inputmode="numeric" value="47999" spellcheck="false" aria-label="桥端口">
+              </div>
+            </div>
+          </div>
+
+          <div class="switch-row">
+            <span class="switch-label">启用日志</span>
+            <button class="switch is-on" id="logSwitch" type="button" role="switch" aria-checked="true" aria-label="启用日志"><i></i></button>
+          </div>
+
+          <div class="conn-actions">
+            <button class="btn btn--ink" id="btnConnect" type="button">启动服务器</button>
+            <button class="btn" id="btnDisconnect" type="button">停止</button>
+            <button class="btn btn--estop" id="btnEstop" type="button">紧急停止</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 运行日志卡 -->
+      <section class="panel card card--log" aria-labelledby="logTitle">
+        <div class="panel-head">
+          <span class="card-title" id="logTitle">运行日志</span>
+          <span class="card-meta" id="logMeta">0 行 · 自动滚动</span>
+        </div>
+        <div class="log-list scroll" id="logList" role="log" aria-live="polite" aria-relevant="additions"></div>
+        <div class="log-foot">
+          <button class="log-clear" id="logClear" type="button">清空</button>
+          <span class="log-count" id="logCount">SCROLL 0 / 0</span>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ---------- 右列 ---------- -->
+    <div class="col col--right">
+
+      <!-- 机械臂状态卡 -->
+      <section class="panel card card--state" aria-labelledby="stateTitle">
+        <div class="panel-head">
+          <span class="card-title" id="stateTitle">机械臂状态</span>
+          <span class="card-meta" id="stateMeta">SIMULATION</span>
+        </div>
+        <div class="state-body">
+
+          <div class="pose">
+            <div class="sec-head">
+              <span class="lbl">TCP 位姿</span>
+              <span class="sec-meta">MM / DEG</span>
+            </div>
+            <div class="pose-grid">
+              <div class="pose-cell"><span class="pk">X</span><span class="pv" id="poseX">—</span></div>
+              <div class="pose-cell"><span class="pk">Y</span><span class="pv" id="poseY">—</span></div>
+              <div class="pose-cell"><span class="pk">Z</span><span class="pv" id="poseZ">—</span></div>
+            </div>
+            <div class="pose-grid pose-grid--rot">
+              <div class="pose-cell"><span class="pk">Rx</span><span class="pr" id="poseRx">—</span></div>
+              <div class="pose-cell"><span class="pk">Ry</span><span class="pr" id="poseRy">—</span></div>
+              <div class="pose-cell"><span class="pk">Rz</span><span class="pr" id="poseRz">—</span></div>
+            </div>
+          </div>
+
+          <div class="joints">
+            <div class="sec-head">
+              <span class="lbl">关节角度</span>
+              <span class="sec-meta">DEG</span>
+            </div>
+            <div class="jgrid" id="jointReadout">
+              <div class="jcell"><span class="jk">J1</span><span class="jv" id="jv0">—</span><span class="jt" id="jt0">目标 —</span></div>
+              <div class="jcell"><span class="jk">J4</span><span class="jv" id="jv3">—</span><span class="jt" id="jt3">目标 —</span></div>
+              <div class="jcell"><span class="jk">J2</span><span class="jv" id="jv1">—</span><span class="jt" id="jt1">目标 —</span></div>
+              <div class="jcell"><span class="jk">J5</span><span class="jv" id="jv4">—</span><span class="jt" id="jt4">目标 —</span></div>
+              <div class="jcell"><span class="jk">J3</span><span class="jv" id="jv2">—</span><span class="jt" id="jt2">目标 —</span></div>
+              <div class="jcell"><span class="jk">J6</span><span class="jv" id="jv5">—</span><span class="jt" id="jt5">目标 —</span></div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- 关节控制卡 -->
+      <section class="panel card card--ctrl" aria-labelledby="ctrlTitle">
+        <div class="panel-head">
+          <span class="card-title" id="ctrlTitle">关节控制</span>
+          <span class="card-meta" id="ctrlMeta">6 关节 · 软限位已启用</span>
+        </div>
+
+        <div class="ctrl-body">
+          <div class="jrows" id="jrows">
+            <div class="jrow" data-j="0">
+              <div class="jname"><span class="jn">J1</span><span class="jr" data-range>0–340°</span></div>
+              <div class="slider">
+                <span class="s-base"></span><span class="s-fill"></span><span class="s-thumb"></span>
+                <input type="range" min="0" max="340" step="0.5" value="0" aria-label="J1 目标角度">
+              </div>
+              <div class="jbox">
+                <div class="numbox"><input class="num" type="text" inputmode="decimal" value="—" aria-label="J1 角度" spellcheck="false"></div>
+                <span class="target">目标 —</span>
+              </div>
+            </div>
+            <div class="jrow" data-j="1">
+              <div class="jname"><span class="jn">J2</span><span class="jr" data-range>0–180°</span></div>
+              <div class="slider">
+                <span class="s-base"></span><span class="s-fill"></span><span class="s-thumb"></span>
+                <input type="range" min="0" max="180" step="0.5" value="0" aria-label="J2 目标角度">
+              </div>
+              <div class="jbox">
+                <div class="numbox"><input class="num" type="text" inputmode="decimal" value="—" aria-label="J2 角度" spellcheck="false"></div>
+                <span class="target">目标 —</span>
+              </div>
+            </div>
+            <div class="jrow" data-j="2">
+              <div class="jname"><span class="jn">J3</span><span class="jr" data-range>0–163°</span></div>
+              <div class="slider">
+                <span class="s-base"></span><span class="s-fill"></span><span class="s-thumb"></span>
+                <input type="range" min="0" max="163" step="0.5" value="0" aria-label="J3 目标角度">
+              </div>
+              <div class="jbox">
+                <div class="numbox"><input class="num" type="text" inputmode="decimal" value="—" aria-label="J3 角度" spellcheck="false"></div>
+                <span class="target">目标 —</span>
+              </div>
+            </div>
+            <div class="jrow" data-j="3">
+              <div class="jname"><span class="jn">J4</span><span class="jr" data-range>0–335°</span></div>
+              <div class="slider">
+                <span class="s-base"></span><span class="s-fill"></span><span class="s-thumb"></span>
+                <input type="range" min="0" max="335" step="0.5" value="0" aria-label="J4 目标角度">
+              </div>
+              <div class="jbox">
+                <div class="numbox"><input class="num" type="text" inputmode="decimal" value="—" aria-label="J4 角度" spellcheck="false"></div>
+                <span class="target">目标 —</span>
+              </div>
+            </div>
+            <div class="jrow" data-j="4">
+              <div class="jname"><span class="jn">J5</span><span class="jr" data-range>0–220°</span></div>
+              <div class="slider">
+                <span class="s-base"></span><span class="s-fill"></span><span class="s-thumb"></span>
+                <input type="range" min="0" max="220" step="0.5" value="0" aria-label="J5 目标角度">
+              </div>
+              <div class="jbox">
+                <div class="numbox"><input class="num" type="text" inputmode="decimal" value="—" aria-label="J5 角度" spellcheck="false"></div>
+                <span class="target">目标 —</span>
+              </div>
+            </div>
+            <div class="jrow" data-j="5">
+              <div class="jname"><span class="jn">J6</span><span class="jr" data-range>0–335°</span></div>
+              <div class="slider">
+                <span class="s-base"></span><span class="s-fill"></span><span class="s-thumb"></span>
+                <input type="range" min="0" max="335" step="0.5" value="0" aria-label="J6 目标角度">
+              </div>
+              <div class="jbox">
+                <div class="numbox"><input class="num" type="text" inputmode="decimal" value="—" aria-label="J6 角度" spellcheck="false"></div>
+                <span class="target">目标 —</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="ctrl-actions">
+            <button class="btn btn--outline" id="btnHome" type="button">恢复默认</button>
+            <button class="btn btn--ink btn--wide" id="btnApply" type="button">应用关节角度</button>
+          </div>
+
+          <div class="gripper">
+            <div class="gn"><span class="gk">夹爪</span><span class="gr" id="gripperRange">0–110°</span></div>
+            <div class="slider slider--grip" id="gripperSlider">
+              <span class="s-base"></span><span class="s-fill"></span><span class="s-thumb"></span>
+              <input type="range" id="gripperInput" min="0" max="110" step="0.5" value="0" aria-label="夹爪开合角">
+            </div>
+            <div class="gbox">
+              <div class="numbox"><input class="num" id="gripperNum" type="text" inputmode="decimal" value="—" aria-label="夹爪角度" spellcheck="false"></div>
+              <button class="btn btn--grip" id="btnGripper" type="button">启动负压吸盘</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ============ 底部提示条 ============ -->
+  <footer class="hintbar">
+    <span class="hintbar-note">MuJoCo 为独立进程 · 软限位已启用 · 关节速度上限 180°/s · 真机模式需二次确认</span>
+    <span class="hintbar-meta" id="hintMeta">SIM · CHANNEL USB1</span>
+  </footer>
+
+</div>
+
+<div class="toast-host" id="toastHost" aria-live="assertive"></div>
+<script src="./base.js"></script>
+</body>
+</html>

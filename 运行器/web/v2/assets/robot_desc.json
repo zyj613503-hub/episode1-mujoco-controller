@@ -1,0 +1,899 @@
+{
+ "schema": "dsh.robot_desc/1",
+ "generated_by": "tools/build_robot_desc.py",
+ "name": "episode1",
+ "unit": "m",
+ "source": {
+  "arm_urdf": "运行器/web/v2/assets/urdf/episode1_urdf_1113.urdf",
+  "gripper_urdf": "运行器/web/v2/assets/urdf/gripper.urdf",
+  "model_xml": "model/episode1.xml"
+ },
+ "links": [
+  {
+   "name": "base_link",
+   "mesh": "assets/meshes/visual/base_link.STL",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "visual_origin": {
+    "xyz": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rpy": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   }
+  },
+  {
+   "name": "link1",
+   "mesh": "assets/meshes/visual/link1.STL",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "visual_origin": {
+    "xyz": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rpy": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   }
+  },
+  {
+   "name": "link2",
+   "mesh": "assets/meshes/visual/link2.STL",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "visual_origin": {
+    "xyz": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rpy": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   }
+  },
+  {
+   "name": "link3",
+   "mesh": "assets/meshes/visual/link3.STL",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "visual_origin": {
+    "xyz": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rpy": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   }
+  },
+  {
+   "name": "link4",
+   "mesh": "assets/meshes/visual/link4.STL",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "visual_origin": {
+    "xyz": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rpy": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   }
+  },
+  {
+   "name": "link5",
+   "mesh": "assets/meshes/visual/link5.STL",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "visual_origin": {
+    "xyz": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rpy": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   }
+  },
+  {
+   "name": "link6",
+   "mesh": "assets/meshes/visual/link6.STL",
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "color": [
+    0.7922,
+    0.8196,
+    0.9333
+   ],
+   "visual_origin": {
+    "xyz": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rpy": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   }
+  }
+ ],
+ "joints": [
+  {
+   "name": "joint1",
+   "type": "revolute",
+   "parent": "base_link",
+   "child": "link1",
+   "axis": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "origin": {
+    "xyz": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rpy": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "limit": {
+    "lower": -3.141592654,
+    "upper": 2.792526803
+   }
+  },
+  {
+   "name": "joint2",
+   "type": "revolute",
+   "parent": "link1",
+   "child": "link2",
+   "axis": [
+    0.0,
+    0.0,
+    -1.0
+   ],
+   "origin": {
+    "xyz": [
+     0.055,
+     -0.02,
+     0.166
+    ],
+    "rpy": [
+     1.5708,
+     0.0,
+     0.0
+    ]
+   },
+   "limit": {
+    "lower": -1.570796327,
+    "upper": 1.570796327
+   }
+  },
+  {
+   "name": "joint3",
+   "type": "revolute",
+   "parent": "link2",
+   "child": "link3",
+   "axis": [
+    0.0,
+    0.0,
+    -1.0
+   ],
+   "origin": {
+    "xyz": [
+     0.0,
+     0.2,
+     0.0
+    ],
+    "rpy": [
+     0.0,
+     0.0,
+     3.1416
+    ]
+   },
+   "limit": {
+    "lower": -1.448623279,
+    "upper": 1.396263402
+   }
+  },
+  {
+   "name": "joint4",
+   "type": "revolute",
+   "parent": "link3",
+   "child": "link4",
+   "axis": [
+    0.0,
+    0.0,
+    -1.0
+   ],
+   "origin": {
+    "xyz": [
+     0.0,
+     -0.056,
+     -0.02
+    ],
+    "rpy": [
+     -1.5708,
+     0.0,
+     -1.5708
+    ]
+   },
+   "limit": {
+    "lower": -0.523598776,
+    "upper": 5.323254219
+   }
+  },
+  {
+   "name": "joint5",
+   "type": "revolute",
+   "parent": "link4",
+   "child": "link5",
+   "axis": [
+    0.0,
+    0.0,
+    -1.0
+   ],
+   "origin": {
+    "xyz": [
+     0.0,
+     0.0,
+     -0.192
+    ],
+    "rpy": [
+     1.5708,
+     -1.5708,
+     0.0
+    ]
+   },
+   "limit": {
+    "lower": -1.919862177,
+    "upper": 1.919862177
+   }
+  },
+  {
+   "name": "joint6",
+   "type": "revolute",
+   "parent": "link5",
+   "child": "link6",
+   "axis": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "origin": {
+    "xyz": [
+     -0.055,
+     0.0,
+     0.0
+    ],
+    "rpy": [
+     1.5708,
+     0.0,
+     -1.5708
+    ]
+   },
+   "limit": {
+    "lower": -0.523598776,
+    "upper": 5.323254219
+   }
+  }
+ ],
+ "joint_offsets_deg": [
+  180.0,
+  90.0,
+  83.0,
+  30.0,
+  110.0,
+  30.0
+ ],
+ "joint_ranges_deg": [
+  [
+   0.0,
+   340.0
+  ],
+  [
+   0.0,
+   180.0
+  ],
+  [
+   0.0,
+   163.0
+  ],
+  [
+   0.0,
+   335.0
+  ],
+  [
+   0.0,
+   220.0
+  ],
+  [
+   0.0,
+   335.0
+  ]
+ ],
+ "world_offset": {
+  "pos": [
+   0.0,
+   0.0,
+   0.0802
+  ],
+  "quat": [
+   1.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "rpy": [
+   0.0,
+   0.0,
+   0.0
+  ]
+ },
+ "flange_link": "link6",
+ "flange_offset_mm": 22.0,
+ "tcp_site_offset_mm": 68.0,
+ "tcp_offset_mm": 120.0,
+ "gripper": {
+  "links": [
+   {
+    "name": "gripper_mount",
+    "mesh": null,
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "color": [
+     0.82,
+     0.82,
+     0.84
+    ],
+    "visual_origin": {
+     "xyz": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "rpy": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    }
+   },
+   {
+    "name": "gripper_base_link",
+    "mesh": "assets/meshes/gripper/gripper_base_link.STL",
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "color": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "visual_origin": {
+     "xyz": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "rpy": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    }
+   },
+   {
+    "name": "link_gear1",
+    "mesh": "assets/meshes/gripper/link_gear1.STL",
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "color": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "visual_origin": {
+     "xyz": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "rpy": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    }
+   },
+   {
+    "name": "link_finger1",
+    "mesh": "assets/meshes/gripper/link_finger1.STL",
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "color": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "visual_origin": {
+     "xyz": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "rpy": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    }
+   },
+   {
+    "name": "link_gear2",
+    "mesh": "assets/meshes/gripper/link_gear2.STL",
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "color": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "visual_origin": {
+     "xyz": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "rpy": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    }
+   },
+   {
+    "name": "link_finger2",
+    "mesh": "assets/meshes/gripper/link_finger2.STL",
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "color": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "visual_origin": {
+     "xyz": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "rpy": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    }
+   },
+   {
+    "name": "link_f1",
+    "mesh": "assets/meshes/gripper/link_f1.STL",
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "color": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "visual_origin": {
+     "xyz": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "rpy": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    }
+   },
+   {
+    "name": "link_f2",
+    "mesh": "assets/meshes/gripper/link_f2.STL",
+    "scale": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "color": [
+     1.0,
+     1.0,
+     1.0
+    ],
+    "visual_origin": {
+     "xyz": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "rpy": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    }
+   }
+  ],
+  "joints": [
+   {
+    "name": "gripper_mount_joint",
+    "type": "fixed",
+    "parent": "gripper_mount",
+    "child": "gripper_base_link",
+    "axis": [
+     0.0,
+     0.0,
+     1.0
+    ],
+    "origin": {
+     "xyz": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "rpy": [
+      1.5707963,
+      0.0,
+      0.0
+     ]
+    },
+    "limit": null
+   },
+   {
+    "name": "joint_gear1",
+    "type": "revolute",
+    "parent": "gripper_base_link",
+    "child": "link_gear1",
+    "axis": [
+     0.0,
+     0.0,
+     -1.0
+    ],
+    "origin": {
+     "xyz": [
+      -0.013,
+      0.03,
+      -0.0217
+     ],
+     "rpy": [
+      0.0,
+      0.0,
+      0.8726646
+     ]
+    },
+    "limit": {
+     "lower": 0.0,
+     "upper": 1.91987
+    }
+   },
+   {
+    "name": "joint_finger1",
+    "type": "revolute",
+    "parent": "link_gear1",
+    "child": "link_finger1",
+    "axis": [
+     0.0,
+     0.0,
+     1.0
+    ],
+    "origin": {
+     "xyz": [
+      -0.025471,
+      0.030842,
+      -0.0012
+     ],
+     "rpy": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "limit": {
+     "lower": -0.8727,
+     "upper": 1.0473
+    }
+   },
+   {
+    "name": "joint_gear2",
+    "type": "revolute",
+    "parent": "gripper_base_link",
+    "child": "link_gear2",
+    "axis": [
+     0.0,
+     0.0,
+     -1.0
+    ],
+    "origin": {
+     "xyz": [
+      0.013,
+      0.03,
+      -0.023884
+     ],
+     "rpy": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "limit": {
+     "lower": -1.0473,
+     "upper": 0.8727
+    }
+   },
+   {
+    "name": "joint_finger2",
+    "type": "revolute",
+    "parent": "link_gear2",
+    "child": "link_finger2",
+    "axis": [
+     0.0,
+     0.0,
+     1.0
+    ],
+    "origin": {
+     "xyz": [
+      0.025471,
+      0.030842,
+      0.0009835
+     ],
+     "rpy": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "limit": {
+     "lower": -1.0473,
+     "upper": 0.8727
+    }
+   },
+   {
+    "name": "joint_f1",
+    "type": "revolute",
+    "parent": "gripper_base_link",
+    "child": "link_f1",
+    "axis": [
+     0.0,
+     0.0,
+     1.0
+    ],
+    "origin": {
+     "xyz": [
+      -0.035,
+      0.018,
+      -0.0209
+     ],
+     "rpy": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "limit": {
+     "lower": -1.0473,
+     "upper": 0.8727
+    }
+   },
+   {
+    "name": "joint_f2",
+    "type": "revolute",
+    "parent": "gripper_base_link",
+    "child": "link_f2",
+    "axis": [
+     0.0,
+     0.0,
+     -1.0
+    ],
+    "origin": {
+     "xyz": [
+      0.035,
+      0.018,
+      -0.0209
+     ],
+     "rpy": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "limit": {
+     "lower": -1.0473,
+     "upper": 0.8727
+    }
+   }
+  ],
+  "mount": {
+   "pos": [
+    0.0,
+    0.0,
+    0.022
+   ],
+   "quat": [
+    1.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "rpy": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "drive": {
+   "name": "gripper_servo",
+   "joint": "joint_gear1",
+   "ctrl_max": 1.7
+  },
+  "coupling": [
+   {
+    "joint": "joint_finger1",
+    "driver": "joint_gear1",
+    "polycoef": [
+     -0.872665,
+     1.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "joint": "joint_gear2",
+    "driver": "joint_gear1",
+    "polycoef": [
+     0.872665,
+     -1.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "joint": "joint_finger2",
+    "driver": "joint_gear2",
+    "polycoef": [
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "joint": "joint_f1",
+    "driver": "joint_gear1",
+    "polycoef": [
+     0.872665,
+     -1.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "joint": "joint_f2",
+    "driver": "joint_gear2",
+    "polycoef": [
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   }
+  ],
+  "range_deg": [
+   0.0,
+   110.0
+  ]
+ }
+}
