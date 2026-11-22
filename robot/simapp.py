@@ -64,12 +64,21 @@ except Exception:  # noqa: BLE001  —— 允许被直接当脚本调试时 cwd 
 
 def _venv_python():
     p = WORK4_DIR / ".venv" / "bin" / "python"
+    if not p.is_file():                      # Windows：.venv\Scripts\python.exe
+        p = WORK4_DIR / ".venv" / "Scripts" / "python.exe"
     return str(p) if p.is_file() else sys.executable
 
 
 def _mjpython():
-    p = WORK4_DIR / ".venv" / "bin" / "mjpython"
-    return str(p) if p.is_file() else ""
+    # 先看项目自己的 venv；服务是用别的解释器起的（比如系统的）时，
+    # 也要能借到项目 .venv 里的 mjpython，否则 macOS 开不了 MuJoCo 窗口
+    # 注意：这里不能写 项目根/.venv —— 那只是"项目自己的 venv"，用 sys.executable
+    # 才能真正找到"当前解释器的 venv"（例如 work4/.venv 跑起来、包在子目录里）
+    for base in (Path(sys.executable).parent.parent, WORK4_DIR / ".venv"):
+        p = base / "bin" / "mjpython"
+        if p.is_file():
+            return str(p)
+    return ""
 
 
 def _launch_command(port, gui):
@@ -380,9 +389,14 @@ def launch_app(port=DEFAULT_PORT, gui=True, host=DEFAULT_HOST):
             raise SimAppError("无法写启动日志 %s：%s" % (LAUNCH_LOG, exc))
         cmd = _launch_command(port, gui)
         try:
+            # Windows 上 start_new_session 是可接受的别名；PYTHONIOENCODING 保证
+            # 子进程的控制台/管道输出永远是 UTF-8（否则 cp936 下打中文会崩）
+            env = dict(os.environ)
+            env.setdefault("PYTHONIOENCODING", "utf-8")
+            env.setdefault("PYTHONUTF8", "1")
             proc = subprocess.Popen(cmd, cwd=str(WORK4_DIR), stdin=subprocess.DEVNULL,
                                     stdout=logf, stderr=subprocess.STDOUT,
-                                    start_new_session=True)
+                                    start_new_session=True, env=env)
         except OSError as exc:
             logf.close()
             raise SimAppError("启动 MuJoCo 仿真应用失败：%s" % exc)

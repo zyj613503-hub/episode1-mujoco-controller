@@ -81,6 +81,12 @@ log = logging.getLogger("simapp")
 
 
 def setup_logging(verbose: bool = False) -> None:
+    # Windows 控制台默认 cp936，日志里有 emoji/长中文时可能抛 UnicodeEncodeError
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            stream.reconfigure(encoding="utf-8", errors="replace")
+        except (AttributeError, ValueError, OSError):
+            pass
     LOG_DIR.mkdir(parents=True, exist_ok=True)
     log.setLevel(logging.DEBUG)
     fmt = logging.Formatter("%(asctime)s %(levelname)-5s %(message)s", "%Y-%m-%d %H:%M:%S")
@@ -248,7 +254,9 @@ class ArmSim:
                     self._last_dump = self.data.time
                     try:
                         import json as _json
-                        with open(STATE_JSON, "w") as fp:
+                        # Windows 上 chcp 65001 会让默认编码变 UTF-8、否则是 cp936；
+                        # 显式指定，跨平台一致，也不会写坏中文
+                        with open(STATE_JSON, "w", encoding="utf-8") as fp:
                             _json.dump({"time": round(float(self.data.time), 3),
                                         "deg": [round(v, 2) for v in qpos_to_motor(self.q_actual)],
                                         "gripper": round(self.grip_now, 2)}, fp)

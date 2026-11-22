@@ -43,8 +43,10 @@ import time
 import robot.convention as C
 
 # ---------------------------------------------------------------- 常量
+# PCAN-Basic 动态库：macOS 是 .dylib，Windows 是 PCBUSB.dll（32/64 位必须和 Python 匹配，
+# 64 位 Python 要用 64 位 DLL，且 DLL 得在 PATH 或包目录里）
 LIB_PATH = "/Applications/Episode1.app/Contents/Frameworks/libPCBUSB.dylib"
-LIB_FALLBACKS = ("libPCBUSB.dylib", "libpcanbasic.dylib")
+LIB_FALLBACKS = ("libPCBUSB.dylib", "libpcanbasic.dylib", "PCBUSB.dll", "PCANBasic.dll")
 
 CAN_HANDLE_USB1 = 0x51          # PCAN_USBBUS1
 CAN_HANDLE_USB2 = 0x52

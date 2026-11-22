@@ -684,7 +684,19 @@ class RunnerServer(ThreadingHTTPServer):
     allow_reuse_address = True
 
 
+# Windows 上如果 chcp 改成了 65001，Python 会进 UTF-8 模式（默认 UTF-8）；
+# 否则中文控制台/重定向到文件时是 cp936。两种都可能打不出中文，这里统一兜底成
+# 「UTF-8，遇到怪字符就替换」，绝不会因为打一行日志把服务打断。
+def _force_utf8_console():
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            stream.reconfigure(encoding="utf-8", errors="replace")
+        except (AttributeError, ValueError, OSError):
+            pass
+
+
 def main():
+    _force_utf8_console()
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     SCRIPTS_DIR.mkdir(parents=True, exist_ok=True)
     address = (HOST, PORT)
