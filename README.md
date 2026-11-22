@@ -23,11 +23,12 @@ and an independent MuJoCo simulation process.
 
 ## Requirements
 
-- macOS 13 or newer recommended
+- macOS 13 or newer, or Windows 10/11
 - Python 3.9-3.13 (tested with Python 3.12)
 - MuJoCo 3.17.0, Mink 1.4.0, and NumPy
 
-Linux and Windows are not yet verified.
+The Windows launcher is included, but the complete Windows runtime is not yet
+end-to-end verified. Linux is also not yet verified.
 
 ## Quick Start
 
@@ -48,11 +49,25 @@ On macOS, after installing Python, you can also:
 2. Double-click `2-启动上位机.command` to start the server and open the
    control panel.
 
+On Windows, create the environment from Command Prompt in this folder:
+
+```bat
+py -3.12 -m venv .venv
+.venv\Scripts\python.exe -m pip install -U pip
+.venv\Scripts\python.exe -m pip install -r requirements.txt
+```
+
+Then double-click `2-启动上位机.bat` to start the server and open the control
+panel. Closing its terminal window stops the service.
+
 To use a different port:
 
 ```bash
 UPPER_PORT=8780 .venv/bin/python 运行器/server/app.py
 ```
+
+On Windows, run `set UPPER_PORT=8780` before starting
+`2-启动上位机.bat` from Command Prompt.
 
 ## Usage
 
@@ -96,7 +111,9 @@ model/scene_episode1.xml
 - Real-hardware control has not been verified end-to-end on a physical arm.
 - Start with small, slow motions when testing real hardware and keep an
   emergency stop available.
-- The current packaging and validation target macOS only.
+- The macOS workflow has been fully validated. The Windows launcher is
+  provided, but the Windows runtime still needs end-to-end hardware and
+  simulation verification.
 - The MuJoCo simulation is more ideal than real joint tracking and does not
   represent final hardware latency or calibration.
 
